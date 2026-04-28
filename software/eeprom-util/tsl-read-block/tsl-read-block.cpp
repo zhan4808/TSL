@@ -1,10 +1,11 @@
 // tsl-read-block.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include <cstdint>
+#include <cstdio>
 #include <iostream>
-using namespace std;
 
-#include <stdio.h>
+using namespace std;
 
 uint8_t c2bcd(uint8_t c) {
 
@@ -105,15 +106,13 @@ int main(int argc, char** argv)
 
 	if (argc < 2) {
 		std::cout << "Usage: tsl-read-block fname \n";
-		std::cout << "Where: fname is the name of the biary EEPROM file to be decoded\n";
+		std::cout << "Where: fname is the name of the binary EEPROM file to be decoded\n";
 		return 1;
 	}
 
 	// Open the output file
 
-	FILE* f;
-	#pragma warning(suppress : 4996)
-	f = fopen(argv[1], "rb");
+	FILE* f = fopen(argv[1], "rb");
 
 	if (!f) {
 		std::cout << "ERROR: Could not open " << argv[1] << endl;
@@ -142,10 +141,10 @@ int main(int argc, char** argv)
 
 	}
 
-	printf("STARTFLAG: 0x%02x", start_flag);;
+	printf("STARTFLAG: 0x%02x", start_flag);
 
 	if (start_flag == 0x00) {
-		cout << " (Time has has NOT set yet on device)";
+		cout << " (Start time has NOT been copied to RTC on device)";
 	}
 	else {
 		cout << " (Time HAS been set on device)";
@@ -184,7 +183,7 @@ int main(int argc, char** argv)
 
 	}
 
-	printf("TRIGGERFLAG: 0x%02x", trigger_flag);;
+	printf("TRIGGERFLAG: 0x%02x", trigger_flag);
 
 	if (trigger_flag == 0x00) {
 		cout << " (Trigger pin has NOT been pulled yet)";
@@ -217,16 +216,18 @@ int main(int argc, char** argv)
 	cout << endl;
 
 
-	printf("LOWVOLTAGEFLAG: 0x%02x", low_voltage_flag);;
+	printf("LOWVOLTAGEFLAG: 0x%02x", low_voltage_flag);
 
 	if (low_voltage_flag == 0x00) {
-		cout << " (No low voltage seen, clock shoudl be correct.)";
+		cout << " (No low voltage seen, clock should be correct.)";
 	}
 	else {
 		cout << " (Low voltage seen, clock may be inaccurate.)";
 	}
 	cout << endl;
 
+	fclose(f);
+	return 0;
 
 }
 

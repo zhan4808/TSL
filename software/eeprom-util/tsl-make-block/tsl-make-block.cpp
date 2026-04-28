@@ -5,10 +5,6 @@
 
 
 #include "pch.h"
-#include <iostream>
-
-#include <time.h>
-#include <stdio.h>
 
 using namespace std;
 
@@ -55,7 +51,7 @@ int parse2digitstr(int  *n, const char* s) {
 
 }
 
-void printtm(struct tm* tm) {
+void printtm(std::tm* tm) {
 	char buffer[26];
 	strftime(buffer, 26, "%Y:%m:%d %H:%M:%S", tm);
 	std::cout << buffer;		
@@ -63,9 +59,9 @@ void printtm(struct tm* tm) {
 
 // Returns string of the malformed field, or null if success
 
-const char *parsetimestr(struct tm *tm_out, const char* s) {
+const char *parsetimestr(std::tm *tm_out, const char* s) {
 
-	struct tm tm;
+	std::tm tm = {};
 
 	int century, year;
 
@@ -109,7 +105,7 @@ const char *parsetimestr(struct tm *tm_out, const char* s) {
 
 }
 
-void writetimeblock(FILE* f, tm* tm_gmt , uint8_t flag ) {
+void writetimeblock(FILE* f, std::tm* tm_gmt , uint8_t flag ) {
 
 	int y = tm_gmt->tm_year;		// years since 1900
 
@@ -136,7 +132,7 @@ int main( int argc , char **argv ) {
 
 	if ( argc < 2 ) {
 		std::cout << "Usage: tsl-make-block fname [-o offset_secs] [-s YYYYMMDDHHMMSS] [-t YYYYMMDDHHMMSS] [-v]\n";
-		std::cout << "Where: fname is the name of the biary EEPROM file to be created\n";
+		std::cout << "Where: fname is the name of the binary EEPROM file to be created\n";
 		std::cout << "       offset_secs is number of seconds to add or subtract to current time to set start time\n";
 		std::cout << "       times are GMT by convention. If you use offset, current time will convert to GMT\n";
 		return 1;
@@ -144,11 +140,11 @@ int main( int argc , char **argv ) {
 
 	// Grab time now first
 
-	tm tm_start_gmt;
+	std::tm tm_start_gmt;
 	memset(&tm_start_gmt, 0xff , sizeof(tm_start_gmt));		// Just use 0xff in the case where this value is not used so they start out and will cause errors.
 	bool starttime_set_flag = false;
 
-	tm tm_trigger_gmt;
+	std::tm tm_trigger_gmt;
 	memset(&tm_trigger_gmt, 0xff , sizeof(tm_trigger_gmt));		// Just use 0xff in the case where this value is not used so they start out and will cause errors.
 	bool triggertime_set_flag = false;
 
@@ -159,8 +155,11 @@ int main( int argc , char **argv ) {
 	// Open the output file
 
 	FILE* f;
-	#pragma warning(suppress : 4996)
 	f = fopen(argv[arg++], "wb");
+	if (!f) {
+		std::cout << "ERROR: Could not open output file.\n";
+		return 1;
+	}
 
 	while ( arg < argc ) {
 
@@ -168,7 +167,7 @@ int main( int argc , char **argv ) {
 
 		if (argv[arg][0] != '-') {
 
-			std::cout << "ERROR: I don't undertsand the argument `" << argv[arg] << "`" << endl;
+			std::cout << "ERROR: I don't understand the argument `" << argv[arg] << "`" << endl;
 			return 1;
 
 		}
@@ -190,8 +189,7 @@ int main( int argc , char **argv ) {
 				starttime= time(NULL);
 				starttime += offset;
 
-				#pragma warning(suppress : 4996)
-				tm_start_gmt = *gmtime(&starttime);
+				tm_start_gmt = *std::gmtime(&starttime);
 
 				starttime_set_flag = true;
 

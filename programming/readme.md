@@ -70,7 +70,7 @@ The batch file uses the `atprogram` command to actually download the firmware fl
 
 #### Fuses
 
-The `atrprogram` command sets the fuses like so...
+The `atprogram` command sets the fuses like so...
 
 JTAGUSERID = 0xFF
 WDWP = <none selected>
@@ -112,7 +112,7 @@ If you ever want to remove the stored API key (you are selling the computer, or 
 
 `REG delete HKCU\Environment /V burnthis_airtable_api_key`
 
-...and the next time you run `burnthis.bat`you will be asked to enter a new key.
+...and the next time you run `burnthis.bat` you will be asked to enter a new key.
 
 ### Checking your work
 
@@ -120,9 +120,9 @@ You can use the `read-eeprom.bat` batch file to read and print the eeprom of an 
 
 ### Sample block file
 
-The `party-like.bin` eeprom block will set the clock to just after midnight on Jan 1, 2000. You can use the Atmel Studio "Device programming tools" or AVRDude to load this file into EEPROM for testing.
+The `eeprom-utils-bin/party-like.bin` EEPROM image sets the clock to just after midnight on Jan 1, 2000. You can use the Atmel Studio "Device programming tools" or AVRDude to load this file into EEPROM for testing.
 
 It was created with this command line...
 ```
-tsl-make-block.exe party-like.bin -s 20000101000000
+eeprom-utils-bin\tsl-make-block.exe eeprom-utils-bin\party-like.bin -s 20000101000000
 ```  

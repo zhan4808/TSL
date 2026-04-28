@@ -21,7 +21,7 @@ set tempdeviceidfile=%tmp%\burnitdeviceid.txt
 set tempfirmwarehashfile=%tmp%\burnitfirmwarehash.txt
 set tempfirmwarerecordfile=%tmp%\burnitfirmwarerecord.txt
 
-REM clear out the rrormessage variable since we use this to see if everything OK
+REM clear out the errormessage variable since we use this to see if everything OK
 set "errormessage="
 
 if NOT "%burnthis_airtable_api_key%"=="" goto have_api_key
@@ -126,7 +126,7 @@ REM Ok, now we finally have the recordID we need to give airtable for it to let 
 set firwarerecordid=%firmwarerecordescaped:~19,17%
 
 
-REM Lets capture the device ID from the ATMEGA chip
+REM Lets capture the device ID from the XMEGA chip
 REM https://electronics.stackexchange.com/questions/414087/how-can-you-read-out-the-serial-number-of-an-xmega-chip-in-a-batch-file-during-p
 "C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\atprogram.exe" --tool avrispmk2 --interface pdi --device atxmega128b3 read --prodsignature --offset 0x08 --size 11 --format hex --file %tempdeviceidfile%
 if errorlevel 1 (
